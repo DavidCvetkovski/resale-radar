@@ -1,0 +1,7 @@
+# Personal settings written by install.sh (email address, ntfy topic)
+extension/config.js
+extension/control.json
+
+__pycache__/
+*.pyc
+.DS_Store

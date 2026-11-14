@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TicketSwap Alarm dashboard</title>
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>🎟️ TicketSwap Alarm</h1>
+      <p class="sub" id="meta"></p>
+    </div>
+    <nav class="seg views" id="views" role="tablist" aria-label="View">
+      <button role="tab" data-view="overview">Overview</button>
+      <button role="tab" data-view="controls">Controls</button>
+    </nav>
+  </header>
+
+  <section class="card health" aria-live="polite">
+    <div class="health-row" id="health"></div>
+    <div class="quick" id="quick" role="toolbar" aria-label="Quick controls">
+      <label class="switch"><input type="checkbox" id="qEnabled"> Checking on</label>
+      <button id="qCheck" title="Runs one check right away. It only rings if tickets are actually listed.">Check now</button>
+      <button id="qPause15">Pause 15 min</button>
+      <button id="qPause60">Pause 1 h</button>
+      <button id="qResume">Resume now</button>
+      <span class="toast" id="toast" role="status"></span>
+    </div>
+  </section>
+
+  <!-- ===================== Overview ===================== -->
+  <div class="view" id="view-overview">
+    <div class="filters" role="toolbar" aria-label="Filters">
+      <div class="seg" id="ranges" role="group" aria-label="Time range"></div>
+      <select id="eventFilter" aria-label="Event" hidden></select>
+      <span class="sub" id="loading"></span>
+    </div>
+
+    <section class="tiles" id="tiles"></section>
+
+    <section class="card">
+      <div class="table-head">
+        <h2>All checks</h2>
+        <label class="check"><input type="checkbox" id="problemsOnly"> Only problems</label>
+        <button id="export">Export CSV</button>
+        <span class="pager" id="pager"></span>
+      </div>
+      <div class="table-wrap">
+        <table id="table">
+          <thead>
+            <tr>
+              <th>Time</th><th>Result</th><th class="num">Available</th><th class="num">Sold</th><th class="num">Wanted</th>
+              <th class="num">Took</th><th class="num">Gap</th><th class="num">Late</th><th>Started by</th><th>Tab</th>
+              <th class="num">Load</th><th class="num">Tries</th><th>Notes</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Diagnosis</h2>
+      <ul class="findings" id="findings"></ul>
+    </section>
+
+    <div class="grid2">
+      <section class="card chart">
+        <div class="chart-head">
+          <div>
+            <h2>Tickets on the page</h2>
+            <p class="sub">What each successful check read from the event page.</p>
+          </div>
+          <div class="legend" id="legend2"></div>
+        </div>
+        <div class="plot"><svg id="chart2" role="img" aria-label="Tickets available, sold and wanted over time"></svg></div>
+      </section>
+      <section class="card chart">
+        <div class="chart-head">
+          <div>
+            <h2>Time between checks</h2>
+            <p class="sub" id="gapSub"></p>
+          </div>
+        </div>
+        <div class="plot"><svg id="chart3" role="img" aria-label="How many checks had each gap since the previous check"></svg></div>
+      </section>
+    </div>
+
+    <div class="grid2">
+      <section class="card">
+        <h2>Setup</h2>
+        <dl class="setup" id="setup"></dl>
+      </section>
+      <section class="card">
+        <h2>Events</h2>
+        <ol class="events" id="events"></ol>
+      </section>
+    </div>
+
+  </div>
+
+  <!-- ===================== Controls ===================== -->
+  <div class="view controls" id="view-controls" hidden>
+    <div class="grid2">
+      <section class="card">
+        <h2>Checking</h2>
+        <p class="sub">Changes save as you make them. Turn checking on or off with the switch at the top.</p>
+        <div class="field">
+          <div class="label">Wait between checks (picked at random)</div>
+          <div class="inline">
+            <input type="number" id="cMin" min="30" step="5" aria-label="Minimum seconds"> to
+            <input type="number" id="cMax" min="30" step="5" aria-label="Maximum seconds"> seconds
+          </div>
+          <div class="chips" id="cPresets"></div>
+          <p class="hint" id="cIntervalHint"></p>
+        </div>
+        <div class="field">
+          <div class="label">When TicketSwap says "too many refreshes"</div>
+          <div class="inline">
+            pause for
+            <select id="cPauseMinutes" aria-label="Pause minutes">
+              <option value="10">10 min</option>
+              <option value="15">15 min</option>
+              <option value="30">30 min</option>
+              <option value="60">1 hour</option>
+            </select>
+            <span class="hint">and double it if it happens again (up to 4×)</span>
+          </div>
+        </div>
+        <div class="field">
+          <div class="label">Pause</div>
+          <div class="inline wrapline">
+            <button data-pause="15">15 min</button>
+            <button data-pause="60">1 hour</button>
+            <button data-pause="180">3 hours</button>
+            <button data-pause="480">8 hours</button>
+            <button id="cResume">Resume now</button>
+          </div>
+          <p class="hint" id="cPauseState"></p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Events to watch</h2>
+        <p class="sub">Each event is checked in its own pinned tab.</p>
+        <ul class="ev-list" id="cEvents"></ul>
+        <form class="inline" id="cAdd">
+          <input type="text" id="cNewUrl" placeholder="Paste a TicketSwap event link" aria-label="Event link">
+          <button>Add</button>
+        </form>
+        <p class="hint" id="cAddHint"></p>
+      </section>
+
+      <section class="card">
+        <h2>When tickets show up</h2>
+        <div class="field">
+          <div class="inline">
+            Alert when at least <input type="number" id="cMinAvailable" min="1" max="20" step="1" aria-label="Minimum tickets"> ticket(s) are listed
+          </div>
+        </div>
+        <div class="field toggles">
+          <label class="switch"><input type="checkbox" id="cAlertMac"> Ring the Mac alarm</label>
+          <label class="switch"><input type="checkbox" id="cAlertNotify"> Show a Chrome notification</label>
+          <label class="switch"><input type="checkbox" id="cAlertTab"> Bring the TicketSwap tab to the front</label>
+          <label class="switch"><input type="checkbox" id="cAlertEmail"> Send an email</label>
+          <label class="switch"><input type="checkbox" id="cAlertPhone"> Push to my phone (ntfy)</label>
+        </div>
+        <div class="field">
+          <div class="label">Email address</div>
+          <input type="email" id="cEmail" class="wide" aria-label="Email address">
+        </div>
+        <div class="field">
+          <div class="label">Phone push topic</div>
+          <div class="inline wrapline">
+            <code id="cTopic"></code>
+            <a id="cTopicLink" target="_blank" rel="noopener">Open in browser</a>
+            <button id="cNewTopic">New topic</button>
+          </div>
+          <p class="hint">Subscribe to this topic in the free ntfy app. A new topic means subscribing again.</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Alarm sound</h2>
+        <div class="field">
+          <div class="label">Mac volume while ringing: <b id="cVolumeValue"></b></div>
+          <input type="range" id="cVolume" min="10" max="100" step="5" class="wide" aria-label="Alarm volume">
+          <p class="hint">Your normal volume comes back when the alarm stops.</p>
+        </div>
+        <div class="field">
+          <div class="inline">
+            Ring for
+            <select id="cAlarmSeconds" aria-label="Ring for">
+              <option value="30">30 seconds</option>
+              <option value="60">1 minute</option>
+              <option value="120">2 minutes</option>
+              <option value="300">5 minutes</option>
+              <option value="600">10 minutes</option>
+            </select>
+            <span class="hint">or until you click Stop</span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="switch"><input type="checkbox" id="cVoice"> Say "Tickets available on TicketSwap" between sirens</label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Tests</h2>
+        <p class="sub">Silent unless it says otherwise. Each one tests a single channel.</p>
+        <ul class="tests" id="cTests"></ul>
+      </section>
+
+      <section class="card">
+        <h2>Data &amp; add-on</h2>
+        <dl class="setup" id="cData"></dl>
+        <div class="inline wrapline">
+          <button id="cExport">Export all checks (CSV)</button>
+          <button id="cClear" class="danger">Clear history</button>
+          <button id="cRestart">Restart add-on</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+<script type="module" src="dashboard.js"></script>
+</body>
+</html>
