@@ -1,5 +1,5 @@
 #!/bin/bash
-# Installs TicketSwap Alarm into ~/Library/Application Support/TicketSwapAlarm and registers
+# Installs Resale Radar into ~/Library/Application Support/TicketSwapAlarm and registers
 # the Mac helper with Chrome. Safe to re-run: your email and ntfy topic are kept.
 #
 #   ./install.sh you@example.com
@@ -37,7 +37,7 @@ PY
 cat > "$HOSTS/$HOST_NAME.json" <<JSON
 {
   "name": "$HOST_NAME",
-  "description": "TicketSwap Alarm Mac helper",
+  "description": "Resale Radar Mac helper",
   "path": "$DEST/host/alarm_host.py",
   "type": "stdio",
   "allowed_origins": ["chrome-extension://$ID/"]

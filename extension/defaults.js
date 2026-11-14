@@ -2,8 +2,8 @@
 // change in the popup or dashboard are layered on top. Shared by worker.js and dashboard.js.
 export const DEFAULT_OPTIONS = {
   enabled: true,
-  minSeconds: 45, // random wait between checks
-  maxSeconds: 90,
+  minSeconds: 120, // random wait between checks; gentle on purpose
+  maxSeconds: 240,
   pauseMinutes: 15, // pause after "too many refreshes"; doubles on repeats, up to 4×
   minAvailable: 1, // alert once at least this many tickets are listed
   alertMac: true,

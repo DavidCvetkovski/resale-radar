@@ -1,4 +1,4 @@
-// TicketSwap Alarm: reloads each watched event page in a pinned tab at a random interval
+// Resale Radar: reloads each watched event page in a pinned tab at a random interval
 // between your min and max seconds, reads the "N available • N sold • N wanted" line, and when N available goes up it
 // shows a notification, rings the Mac and emails you (both via the native Mac helper),
 // and pushes to your phone (via ntfy.sh).
@@ -270,7 +270,7 @@ async function endEvent(ev, prev, state, settings, stopAt) {
     chrome.notifications.create(`ended|${ev.url}|${Date.now()}`, {
       type: 'basic',
       iconUrl: 'icon.png',
-      title: 'TicketSwap Alarm stopped',
+      title: 'Resale Radar stopped',
       message: `${name} is over, so it's no longer being checked. Set a later stop time in the dashboard to keep going.`,
       priority: 0,
     });
@@ -405,7 +405,7 @@ const CHANNEL_SETTING = { mac: 'alertMac', notify: 'alertNotify', email: 'alertE
 async function fire(name, info, url, settings, test, only) {
   const n = info.available;
   const use = (channel) => (only ? only === channel : settings[CHANNEL_SETTING[channel]]);
-  const title = test ? 'Test alarm: TicketSwap Alarm works' : 'Tickets available!';
+  const title = test ? 'Test alarm: Resale Radar works' : 'Tickets available!';
   const message = test
     ? `This is what you'll get when tickets show up for ${name}.`
     : `${n} ticket${n === 1 ? '' : 's'} listed for ${name}. Go go go!`;
@@ -439,7 +439,7 @@ async function fire(name, info, url, settings, test, only) {
 }
 
 async function warnBlocked(name, info, url, settings) {
-  const title = 'TicketSwap Alarm is paused';
+  const title = 'Resale Radar is paused';
   const message = `TicketSwap is showing a verification check on ${name}. Open the pinned TicketSwap tab and finish it yourself; checking carries on after that.`;
   if (settings.alertNotify) chrome.notifications.create(`blocked|${url}|${Date.now()}`, { type: 'basic', iconUrl: 'icon.png', title, message, priority: 2 });
   await Promise.all([
@@ -449,7 +449,7 @@ async function warnBlocked(name, info, url, settings) {
 }
 
 async function warnPaused(name, why, at, url, settings) {
-  const title = `TicketSwap Alarm paused until ${at}`;
+  const title = `Resale Radar paused until ${at}`;
   const message = `${why} on ${name}. It starts checking again by itself at ${at}. Don't refresh TicketSwap yourself meanwhile.`;
   if (settings.alertNotify) chrome.notifications.create(`paused|${url}|${Date.now()}`, { type: 'basic', iconUrl: 'icon.png', title, message, priority: 1 });
   if (settings.alertPhone) await pushToPhone(settings, title, message, url, 'default', false);

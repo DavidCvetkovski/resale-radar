@@ -1,4 +1,4 @@
-// Dashboard and control panel for TicketSwap Alarm. The Overview reads the check history and
+// Dashboard and control panel for Resale Radar. The Overview reads the check history and
 // events that worker.js logs to chrome.storage.local (health, diagnosis, charts, every check);
 // Controls changes settings and runs commands through messages to worker.js.
 

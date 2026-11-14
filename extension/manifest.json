@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "TicketSwap Alarm",
-  "version": "1.0.8",
-  "description": "Checks TicketSwap event pages every minute and rings your Mac + emails you when tickets show up.",
+  "name": "Resale Radar",
+  "version": "1.0.9",
+  "description": "Watches TicketSwap event pages at a random interval and rings your Mac, emails you and pushes to your phone when tickets are listed. Not affiliated with TicketSwap.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuSjinsF/uRe4MDgeZNm3/PFbhVvBLdGDKW0+aqAC4nzdPuBV9L6wufB3OjsYvv2IsJo3mCMbpP9HUIirfdeDOec866W0YVY4sHDa3H89y/vRXU/jKgH0ORmRGwCIxc6NLyS3L5g8R75IJ+GaYnQkiCjekKIf6/M8HHEwZlfazVaIMvy3EpNxLJlkHvXih3AYIAjBHljqGXFdw20RQ0wTTy0Ra7lLCSZYsHI5pOS5NudMFkYr3q9CIHNvZZktGiwLupAfE9x0qkrkKOuVs3fIGj/XQleadhyXFazg4+3ldXpWJ2jbTG1YSlh0nRcRAVTK1hLM7F0vkxXKDa0BQF6NAwIDAQAB",
   "permissions": ["alarms", "notifications", "offscreen", "storage", "tabs", "scripting", "nativeMessaging"],
   "host_permissions": ["https://www.ticketswap.com/*", "https://www.ticketswap.nl/*", "https://ntfy.sh/*"],

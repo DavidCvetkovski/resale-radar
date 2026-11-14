@@ -1,5 +1,5 @@
 #!/opt/homebrew/bin/python3
-"""Chrome native-messaging host for the TicketSwap Alarm add-on.
+"""Chrome native-messaging host for the Resale Radar add-on.
 
 Chrome starts this for each message. On {"cmd": "ring"} it launches ring.py in its own
 session (so the alarm keeps going after Chrome closes this process) and answers {"ok": true}.
@@ -48,7 +48,7 @@ def send_email(to, subject, body):
     if found.returncode != 0:
         return {"ok": False, "error": "no Gmail app password yet, run set-gmail-password.sh"}
     mail = EmailMessage()
-    mail["From"] = f"TicketSwap Alarm <{to}>"
+    mail["From"] = f"Resale Radar <{to}>"
     mail["To"] = to
     mail["Subject"] = subject
     mail.set_content(body)
