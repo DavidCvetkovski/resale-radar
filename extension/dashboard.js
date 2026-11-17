@@ -63,16 +63,17 @@ function writePref(key, value) {
 
 // ---------- formatting ----------
 
+// Each number keeps its unit on the same line (non-breaking spaces).
 function fmtDur(ms) {
   if (ms == null || !Number.isFinite(ms)) return '–';
   const s = Math.abs(ms) / 1000;
-  if (s < 10) return `${s.toFixed(1)} s`;
-  if (s < 60) return `${Math.round(s)} s`;
+  if (s < 10) return `${s.toFixed(1)}\u00a0s`;
+  if (s < 60) return `${Math.round(s)}\u00a0s`;
   const m = Math.floor(s / 60);
-  if (m < 60) return `${m} m ${Math.round(s % 60)} s`;
+  if (m < 60) return `${m}\u00a0m ${Math.round(s % 60)}\u00a0s`;
   const h = Math.floor(m / 60);
-  if (h < 48) return `${h} h ${m % 60} m`;
-  return `${Math.floor(h / 24)} d ${h % 24} h`;
+  if (h < 48) return `${h}\u00a0h ${m % 60}\u00a0m`;
+  return `${Math.floor(h / 24)}\u00a0d ${h % 24}\u00a0h`;
 }
 
 const fmtAgo = (t) => (t ? `${fmtDur(Date.now() - t)} ago` : 'never');
